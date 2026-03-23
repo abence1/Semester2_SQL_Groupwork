@@ -1,4 +1,4 @@
-TRUNCATE TABLE EventMan.Updatelog
+--TRUNCATE TABLE EventMan.Updatelog
 MERGE INTO EventMan.DimSuppliers AS target
 USING   (
             SELECT DISTINCT
@@ -46,7 +46,7 @@ WHEN MATCHED THEN
 		target.email = source.email
 WHEN NOT MATCHED BY target
 THEN
-	INSERT (clientkey, firstname, lastname, phone, email)
+	INSERT (clientid, firstname, lastname, phone, email)
 	VALUES (source.clientid, source.firstname, source.lastname, source.phone, source.email)
 ;
 MERGE INTO EventMan.DimDetails AS target
@@ -78,7 +78,7 @@ WHEN MATCHED THEN
 		target.eventstatus = source.status,
 		target.typename = source.typename
 WHEN NOT MATCHED BY target THEN
-	INSERT (detailskey, name, location, startdate, enddate, eventstatus, typename)
+	INSERT (eventid, name, location, startdate, enddate, eventstatus, typename)
 	VALUES (source.eventid, source.name, source.location, source.startdate, source.enddate, source.status, source.typename)
 ;
 MERGE INTO EventMan.DimParticipant AS target
@@ -117,11 +117,12 @@ FROM EventMan.Payments;
 
 WHILE @CurrentDate <= @EndDate
 BEGIN
-    INSERT INTO EventMan.DimDate (date)
-    VALUES (@CurrentDate);
+    INSERT INTO EventMan.DimDate (date, year, month, day, quarter)
+    VALUES (@CurrentDate, year(@CurrentDate), month(@CurrentDate), day(@CurrentDate), DATEPART(QUARTER, @CurrentDate));
     SET @CurrentDate = DATEADD(day, 1, @CurrentDate);
 END
 ;
+
 MERGE INTO EventMan.FactEvent AS target
 USING	(
             SELECT 
