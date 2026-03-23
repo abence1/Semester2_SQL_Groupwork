@@ -16,7 +16,8 @@ CREATE TABLE EventMan.DimSuppliers
 )
 CREATE TABLE EventMan.DimDetails
 (
-	detailskey INT NOT NULL PRIMARY KEY,
+	detailskey INT NOT NULL PRIMARY KEY IDENTITY,
+	eventid INT NOT NULL,
 	name NVARCHAR(100),
 	location NVARCHAR(100),
 	startdate DATETIME,
@@ -35,7 +36,8 @@ CREATE TABLE EventMan.DimParticipant
 )
 CREATE TABLE EventMan.DimClients
 (
-	clientkey INT NOT NULL  PRIMARY KEY,
+	clientkey INT NOT NULL  PRIMARY KEY IDENTITY,
+	clientid INT NOT NULL,
 	firstname NVARCHAR(100),
 	lastname NVARCHAR(100),
 	phone NVARCHAR(100),
@@ -44,7 +46,12 @@ CREATE TABLE EventMan.DimClients
 CREATE TABLE EventMan.DimDate
 (
 	datekey INT NOT NULL PRIMARY KEY IDENTITY,
-	[date] DATETIME NOT NULL
+	[date] DATETIME NOT NULL,
+	year INT NOT NULL,
+	month INT NOT NULL,
+	day INT NOT NULL,
+	quarter INT NOT NULL
+
 )
 CREATE TABLE EventMan.FactEvent
 (
